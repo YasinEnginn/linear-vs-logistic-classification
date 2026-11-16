@@ -26,20 +26,6 @@ output_dir.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_excel(dataset_path)
 
-# "expected shape 7 input features 1 target columns"
-# print("\nDataset shape: ", df.shape) -> (900, 8)
-
-
-# Column names
-# print(df.columns.tolist())
-
-
-# print("\nTarget class counts:")
-# print(df["Class"].value_counts()) -> Kecimen: 450 ,Besni: 450
-
-# print("\nNumber of target classes:")
-# print(df["Class"].nunique()) -> 2
-
 
 fig, ax = plt.subplots(figsize=(6, 4))
 
@@ -66,7 +52,7 @@ fig.savefig(
     output_dir / "raisin_class_distribution.png",
     dpi=300,
 )
-plt.show()
+plt.close(fig)
 
 
 # Mushroom Dataset: categorical visual analysis
@@ -104,7 +90,7 @@ fig.savefig(
     output_dir / "mushroom_class_distribution.png",
     dpi=300,
 )
-plt.show()
+plt.close(fig)
 
 
 mushroom_analysis_df = mushroom_df.assign(
@@ -171,7 +157,7 @@ fig.savefig(
     output_dir / "mushroom_poison_rate_by_odor.png",
     dpi=300,
 )
-plt.show()
+plt.close(fig)
 
 
 odor_habitat_rate = mushroom_analysis_df.pivot_table(
@@ -209,7 +195,7 @@ fig.savefig(
     output_dir / "mushroom_odor_habitat_heatmap.png",
     dpi=300,
 )
-plt.show()
+plt.close(fig)
 
 
 # Credit Card Fraud Dataset: imbalance-aware visual analysis
@@ -252,7 +238,7 @@ fig.savefig(
     output_dir / "credit_card_class_distribution.png",
     dpi=300,
 )
-plt.show()
+plt.close(fig)
 
 
 normal_transactions = credit_df[credit_df["Class"] == 0]
@@ -296,7 +282,7 @@ fig.savefig(
     output_dir / "credit_card_v10_v14_scatter.png",
     dpi=300,
 )
-plt.show()
+plt.close(fig)
 
 
 credit_pair_features = ["V10", "V12", "V14", "V17"]
@@ -325,7 +311,7 @@ credit_pair_grid.savefig(
     output_dir / "credit_card_pairplot.png",
     dpi=300,
 )
-plt.show()
+plt.close(credit_pair_grid.fig)
 
 
 # Report-ready comparison table
@@ -340,12 +326,13 @@ table_columns = [
     "Leakage Audit",
     "Initial Structure",
     "License",
+    "Academic Use",
 ]
 
 table_rows = [
     [
         "Raisin",
-        "UCI 850 / Kaggle",
+        "UCI 850",
         "900",
         "7 numerical",
         "Kecimen / Besni",
@@ -353,11 +340,12 @@ table_rows = [
         "None",
         "No obvious leakage",
         "Overlap and curved feature relations",
-        "CC0 / CC BY 4.0",
+        "CC BY 4.0",
+        "Yes, with attribution",
     ],
     [
         "Mushroom",
-        "UCI 73 / Kaggle",
+        "UCI 73",
         "8,124",
         "22 categorical",
         "Edible / Poisonous",
@@ -365,7 +353,8 @@ table_rows = [
         "stalk-root: ?",
         "No obvious leakage",
         "Strong categorical interactions",
-        "CC0 / CC BY 4.0",
+        "CC BY 4.0",
+        "Yes, with attribution",
     ],
     [
         "Credit Card Fraud",
@@ -378,10 +367,11 @@ table_rows = [
         "Limited by anonymized features",
         "Overlapping PCA regions",
         "ODbL / DbCL",
+        "Yes, follow license and citation",
     ],
 ]
 
-wrap_widths = [14, 14, 10, 16, 16, 14, 12, 20, 22, 16]
+wrap_widths = [14, 14, 10, 16, 16, 14, 12, 20, 22, 16, 18]
 wrapped_rows = [
     [
         fill(str(value), width=width)
@@ -390,7 +380,7 @@ wrapped_rows = [
     for row in table_rows
 ]
 
-fig, ax = plt.subplots(figsize=(19, 5.2))
+fig, ax = plt.subplots(figsize=(21, 5.2))
 ax.axis("off")
 
 comparison_table = ax.table(
@@ -401,16 +391,17 @@ comparison_table = ax.table(
     loc="center",
     bbox=[0, 0, 1, 1],
     colWidths=[
+        0.090,
+        0.075,
+        0.060,
+        0.090,
+        0.090,
+        0.080,
+        0.075,
         0.105,
-        0.090,
-        0.070,
-        0.110,
-        0.100,
+        0.115,
         0.095,
-        0.090,
-        0.120,
-        0.130,
-        0.090,
+        0.125,
     ],
 )
 
@@ -444,7 +435,7 @@ fig.savefig(
     output_dir / "candidate_comparison_table.png",
     dpi=300,
 )
-plt.show()
+plt.close(fig)
 
 
 selected_features = [
@@ -476,7 +467,7 @@ pair_grid.savefig(
     output_dir / "raisin_pairplot.png",
     dpi=300,
 )
-plt.show()
+plt.close(pair_grid.fig)
 
 
 fig, ax = plt.subplots(figsize=(7, 5))
@@ -508,4 +499,4 @@ fig.savefig(
     dpi=300,
 )
 
-plt.show()
+plt.close(fig)

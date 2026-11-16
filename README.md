@@ -1,81 +1,167 @@
 # Linear and Logistic Regression for Binary Classification
 
-This project will implement linear regression and logistic regression from scratch and compare them fairly on the same binary-classification problem. The selected problem is the classification of raisin varieties from image-derived physical measurements.
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![NumPy](https://img.shields.io/badge/Models-NumPy-013243?logo=numpy&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-18%20passed-2EA44F)
+![Dataset](https://img.shields.io/badge/dataset-900%20samples-8C1515)
+![License](https://img.shields.io/badge/data%20license-CC%20BY%204.0-F26B38)
 
-## Current status
+## Purpose
 
-- [x] Define the project requirements and comparison objective
-- [x] Research three structurally different binary-classification candidates
-- [x] Verify sources, licenses, sample counts, target classes, and leakage risks
-- [x] Perform an initial visual assessment of candidate nonlinearity
-- [x] Select and document the final dataset
-- [x] Preserve the selected raw dataset without modification
-- [x] Complete the basic data inspection (EDA Task 3.1)
-- [ ] Produce the full exploratory visualization set
-- [ ] Define preprocessing and stratified train/validation/test splits
-- [ ] Implement linear regression from scratch
-- [ ] Implement logistic regression from scratch
-- [ ] Tune both models under the same validation protocol
-- [ ] Compare raw and polynomial/interaction feature spaces
-- [ ] Evaluate the final models and write the report
+This is a learning project. Its purpose is to show that the main ideas from
+the first three weeks of *Supervised Machine Learning: Regression and
+Classification* can be applied correctly:
 
-## Selected dataset
+- linear and logistic model functions;
+- cost functions;
+- batch gradient descent;
+- feature scaling and polynomial features;
+- L2 regularization;
+- binary predictions and basic evaluation metrics.
+
+The goal is not to build a complex machine-learning framework. Both models
+are implemented directly with NumPy and compared on the same data.
+
+## Dataset
+
+The project classifies two raisin varieties using seven image-derived physical
+measurements.
 
 | Item | Value |
 |---|---|
 | Dataset | Raisin Dataset |
-| Primary source | [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/850/raisin) |
+| Source | [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/850/raisin) |
 | License | CC BY 4.0 |
-| Shape | 900 rows × 8 columns |
-| Input features | 7 numerical measurements |
+| Shape | 900 rows x 8 columns |
 | Target | `Class` |
-| Classes | `Kecimen` and `Besni` (450 samples each) |
+| Negative class | `Kecimen` (`0`) |
+| Positive class | `Besni` (`1`) |
+| Class counts | 450 / 450 |
 | Missing values | 0 |
 | Duplicate rows | 0 |
-| Obvious target leakage | None identified |
 
-The small selected raw file is versioned so that the main analysis is reproducible. Larger candidate datasets and downloaded archives are intentionally excluded because their authoritative sources are documented. See [the final dataset-selection record](docs/final_dataset_selection.md) for provenance, licensing, the data dictionary, integrity hash, and the complete decision rationale.
+See [the dataset note](docs/final_dataset_selection.md) for the source, data
+dictionary, license, and selection decision.
+
+<details>
+  <summary><strong>Open the three-candidate dataset comparison</strong></summary>
+  <br>
+  <img src="experiments/01_dataset_candidate_analysis/outputs/candidate_comparison_table.png" alt="Comparison of the three binary-classification dataset candidates">
+</details>
+
+## Visual overview
+
+<table>
+  <tr>
+    <td align="center"><strong>Balanced target classes</strong></td>
+    <td align="center"><strong>Selected feature relationships</strong></td>
+  </tr>
+  <tr>
+    <td><img src="reports/figures/eda/class_distribution.png" alt="Balanced Kecimen and Besni class counts" width="430"></td>
+    <td><img src="reports/figures/eda/selected_feature_scatterplots.png" alt="Class-colored scatter plots for selected raisin features" width="650"></td>
+  </tr>
+</table>
+
+The selected scatter plots show substantial class overlap and relationships
+that are not perfectly represented by one straight boundary. This motivates
+the shared degree-two feature experiment without claiming that every relation
+in the dataset is nonlinear.
+
+## Experiments
+
+Both models use the same 60/20/20 stratified split.
+
+- Experiment A: seven scaled original features.
+- Experiment B: the same features plus degree-two square and interaction terms.
+
+Scaling values are learned from the training set and reused for validation and
+test data. The validation set is used for model choices. The test set is kept
+for one final evaluation.
+
+A small, explicit candidate list is evaluated with validation accuracy as the
+primary selection metric and validation F1-score as the tie-breaker. The
+complete selection table is saved to
+[`validation_model_selection.csv`](reports/results/validation_model_selection.csv).
+
+## Evaluation artifacts
+
+<table>
+  <tr>
+    <td align="center"><strong>Test confusion matrices</strong></td>
+    <td align="center"><strong>Training cost curves</strong></td>
+  </tr>
+  <tr>
+    <td><img src="reports/figures/evaluation/final_test_confusion_matrices.png" alt="Test confusion matrices for the four final experiments" width="540"></td>
+    <td><img src="reports/figures/evaluation/final_training_cost_curves.png" alt="Training cost curves for the four final experiments" width="540"></td>
+  </tr>
+</table>
+
+The numerical results are available in
+[`final_model_comparison.csv`](reports/results/final_model_comparison.csv).
+
+## Current status
+
+- [x] Select and document the dataset
+- [x] Complete data inspection and visual EDA
+- [x] Prepare stratified data splits
+- [x] Scale features without data leakage
+- [x] Create degree-two polynomial features
+- [x] Implement the linear regression classifier
+- [x] Implement the logistic regression classifier
+- [x] Implement confusion-matrix metrics
+- [x] Add unit tests
+- [x] Select a small set of hyperparameters using validation data
+- [x] Run Experiments A and B
+- [x] Evaluate the selected configurations on the held-out test set
+- [ ] Write the final comparison
 
 ## Repository structure
 
 ```text
-data/
-  raw/raisin/                       Unchanged selected dataset
-docs/
-  final_dataset_selection.md        Selection record and data dictionary
-experiments/
-  01_dataset_candidate_analysis/    Candidate-analysis script and figures
-notebooks/
-  basic_data_inspection.ipynb       EDA Task 3.1
-requirements.txt                    Python dependencies
+data/raw/raisin/                     Unchanged source dataset
+docs/final_dataset_selection.md      Dataset note and data dictionary
+experiments/01_dataset_candidate_analysis/
+                                     Initial candidate comparison
+experiments/05_final_model_comparison/
+                                     Validation selection and final evaluation
+notebooks/basic_data_inspection.ipynb
+                                     Basic checks
+notebooks/exploratory_data_analysis.ipynb
+                                     EDA figures and data split
+notebooks/data_preprocessing.ipynb   Encoding, scaling, and features
+src/linear_regression_classifier.py Linear model
+src/logistic_regression_classifier.py
+                                     Logistic model
+src/metrics.py                       Evaluation metrics
+tests/                               Unit tests
+reports/results/                     Reproducible CSV result tables
+reports/figures/                     Report-ready PNG and PDF figures
 ```
 
 ## Setup
 
-The project was developed with Python 3.13 on Windows PowerShell.
-
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Open `notebooks/basic_data_inspection.ipynb` in VS Code and select the `.venv` Python kernel. Run the cells from top to bottom. The notebook loads the unchanged file from `data/raw/raisin/Raisin_Dataset.xlsx`.
+Run tests from the repository root:
 
-## Candidate analysis
+```powershell
+python -m pytest -q
+```
 
-The three candidates intentionally represent different data structures:
+Regenerate validation selection and final evaluation artifacts:
 
-- Raisin: compact, balanced, numerical, and interpretable;
-- Mushroom: categorical and encoding-intensive;
-- Credit Card Fraud: numerical, large, anonymized, and extremely imbalanced.
+```powershell
+python experiments/05_final_model_comparison/final_model_comparison.py
+```
 
-The report-ready PNG and PDF figures are stored under `experiments/01_dataset_candidate_analysis/outputs/`. The [candidate-analysis notes](experiments/01_dataset_candidate_analysis/README.md) list the data sources and local paths required to regenerate every figure.
+## Project rules
 
-## Data policy
-
-- Never edit files under `data/raw/` in place.
-- Write future cleaning, encoding, scaling, and feature-engineering results under `data/processed/`.
-- Do not commit locally downloaded candidate datasets or archives.
-- Record every transformation in code so that processed data can be regenerated.
+- Do not use ready-made linear or logistic regression model classes.
+- Do not modify files under `data/raw/`.
+- Use the same data and features for both models.
+- Learn preprocessing values from training data only.
+- Do not use test results to choose model settings.

@@ -4,6 +4,7 @@ __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 .pytest_cache/
+.tmp_bg_extract/
 
 # Candidate datasets are downloaded locally from the documented sources.
 # Only the selected, compact Raisin raw dataset under data/raw/ is versioned.
@@ -13,9 +14,9 @@ datasets/
 # Generated preprocessing outputs will be reproducible from the raw data.
 data/processed/
 
-# Local planning notes are superseded by the English project README.
-Linear_and_Logistic_Regression_Project_Task_Plan.md
-
 # Operating-system metadata
 .DS_Store
 Thumbs.db
+
+# Unrelated local study material
+Bilgi_Guvenligi_Vize_Soru_Bankasi_100_Soru.md
